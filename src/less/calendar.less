@@ -1,0 +1,69 @@
+html, body, div, p, span {
+	margin: 0;
+	padding: 0;
+} 
+.calendar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	.calendar-title {
+		display: flex;
+		color: #fff;
+		background-color: #31b6e7;
+		justify-content: space-between;
+		font-size: 16px;
+		& > span {
+			padding: 10px;
+		}
+	}
+	.calendar-format {
+		display: flex;
+		color: #31b6e7;
+		text-align: center;
+		padding: 10px 0;
+		& > div {
+			flex: 1;
+		}
+	}
+	.calendar-list {
+		display: flex;
+		height: 9em;
+		font-weight: bold;
+		overflow: hidden;
+		-webkit-mask: linear-gradient(rgba(36, 142, 36, 0), #fff 50%, rgba(36, 142, 36, 0));
+		& > div {
+			flex: 1;
+			text-align: center;
+			p {
+				padding: 10px 0;
+				&.selected {
+					color: #31b6e7;
+				}
+			}
+		}
+	}
+	&.slideUp {
+		animation: slideUp .5s ease forwards;
+	}
+	&.slideDown {
+		animation: slideDown .5s ease forwards;
+	}
+}
+@keyframes slideUp {
+	from {
+		transform: translateY(100%);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+@keyframes slideDown {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(100%);
+	}
+}
