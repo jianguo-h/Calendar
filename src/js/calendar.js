@@ -35,12 +35,16 @@ export default class Calendar {
 		this.selectedMonth = new Date().getMonth() + 1;
 		this.selectedDay = new Date().getDate();
 		this.calendarDom = document.createElement("div");
+		this.calendarContentDom = document.createElement("div");
+		const calendarMaskDom = document.createElement("div");
 		const calendarTitleDom = document.createElement("div");
 		const { calendarFormatDom, calendarListDom } = this.createFormat(format);
 		const calendarCancelDom = document.createElement("span");
 		const calendarConfirmDom = document.createElement("span");
 
 		this.calendarDom.className = "calendar";
+		calendarMaskDom.className = "calendar-mask";
+		this.calendarContentDom.className = "calendar-content";
 		calendarTitleDom.className = "calendar-title";
 		calendarCancelDom.className = "calendar-cancel";
 		calendarConfirmDom.className = "calendar-confirm";
@@ -49,9 +53,11 @@ export default class Calendar {
 
 		calendarTitleDom.appendChild(calendarCancelDom);
 		calendarTitleDom.appendChild(calendarConfirmDom);
-		this.calendarDom.appendChild(calendarTitleDom);
-		this.calendarDom.appendChild(calendarFormatDom);
-		this.calendarDom.appendChild(calendarListDom);
+		this.calendarContentDom.appendChild(calendarTitleDom);
+		this.calendarContentDom.appendChild(calendarFormatDom);
+		this.calendarContentDom.appendChild(calendarListDom);
+		this.calendarDom.appendChild(calendarMaskDom);
+		this.calendarDom.appendChild(this.calendarContentDom);
 
 		target.addEventListener("touchstart", () => {
 			this.appendToBody();
@@ -159,9 +165,9 @@ export default class Calendar {
 	// 将html结构添加到body上
 	appendToBody() {
 		// http://www.runoob.com/jsref/prop-element-classlist.html
-		if(this.calendarDom.classList.contains("slideUp")) return;
+		if(this.calendarContentDom.classList.contains("slideUp")) return;
 
-		this.calendarDom.classList.add("slideUp");
+		this.calendarContentDom.classList.add("slideUp");
 		document.body.appendChild(this.calendarDom);
 
 		// 各种format配置中, 年份为必须项
@@ -371,22 +377,22 @@ export default class Calendar {
 	}
 	// 向下滑动
 	slideDown() {
-		let classList = this.calendarDom.classList;
+		let classList = this.calendarContentDom.classList;
 
 		// 移除 calendar
 		let removeCalendar = () => {
-			this.calendarDom.className = "calendar";
+			this.calendarContentDom.className = "calendar-content";
 			this.calendarDom.parentNode.removeChild(this.calendarDom);
-			this.calendarDom.removeEventListener("animationend", removeCalendar);
-			this.calendarDom.removeEventListener("webkitAnimationEnd", removeCalendar);
+			this.calendarContentDom.removeEventListener("animationend", removeCalendar);
+			this.calendarContentDom.removeEventListener("webkitAnimationEnd", removeCalendar);
 		};
 
 		if(classList.contains("slideUp")) {
 			classList.remove("slideUp");
 			classList.add("slideDown");
 
-			this.calendarDom.addEventListener("animationend", removeCalendar);
-			this.calendarDom.addEventListener("webkitAnimationEnd", removeCalendar);
+			this.calendarContentDom.addEventListener("animationend", removeCalendar);
+			this.calendarContentDom.addEventListener("webkitAnimationEnd", removeCalendar);
 		};
 	}
 	// 获得月份的天数
