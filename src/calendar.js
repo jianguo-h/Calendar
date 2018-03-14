@@ -1,4 +1,4 @@
-export default class Calendar {
+class Calendar {
 	constructor(opts) {
 		this.defaults = {
 			el: "",								// 作用于的元素节点, 同css选择器, eg: #calendar, .calendar
@@ -419,3 +419,5 @@ export default class Calendar {
 		return days;
 	}
 }
+
+export default Calendar;
