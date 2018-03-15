@@ -1,3 +1,4 @@
+import "./calendar.less";
 class Calendar {
 	constructor(opts) {
 		this.defaults = {

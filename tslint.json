@@ -17,6 +17,7 @@
     "member-ordering": false,
     "no-var-requires": false,
     "no-invalid-this": false,
+    "no-string-literal": false,
     "no-empty-interface": true,
     "typedef-whitespace": true,
     "no-duplicate-super": true,

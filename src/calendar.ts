@@ -9,7 +9,7 @@ interface Defaults {
   onCancel: any;
   onConfirm: any;
 }
-// class define typings-for-css-modules-loader
+// class define
 class Calendar {
   private opts: Defaults;
   private defaults: Defaults = {
@@ -26,11 +26,12 @@ class Calendar {
   calendarDom: HTMLElement = document.createElement('div');
   calendarContentDom: HTMLElement = document.createElement('div');
   startY: number;
-
+  // 构造函数
   constructor(opts?: object) {
     this.opts = Object.assign({}, this.defaults, opts);
     this.init();
   }
+  // 初始化
   init(): void {
     const formatArr: string[] = ['yyyy-MM-dd', 'yyyy-MM', 'yyyy'];
     const { readonly, el } : { readonly: boolean, el: string } = this.opts;
@@ -45,7 +46,6 @@ class Calendar {
       target.setAttribute('readonly', readonly.toString());
     }
 
-    // 默认为当前时间
     const calendarMaskDom: HTMLElement = document.createElement('div');
     const calendarTitleDom: HTMLElement = document.createElement('div');
     const { calendarFormatDom, calendarListDom }: { calendarFormatDom: HTMLElement, calendarListDom: HTMLElement } = this.createFormat(format);
@@ -216,11 +216,13 @@ class Calendar {
       dayListDom.childNodes[selectedDay - 1].classList.add('selected');
     }
   }
+  // touchstart event
   touchstart(evt: any): void {
     // http://www.cnblogs.com/zhwl/archive/2013/07/24/3210124.html
     evt.preventDefault();
     this.startY = evt.targetTouches[0].pageY;    // 记录刚开始触控的y坐标
   }
+  // touchmove event
   touchmove(evt: any): void {
     evt.preventDefault();
     let target: any = evt.target || evt.srcElement;
@@ -237,6 +239,7 @@ class Calendar {
     target.style.transform = 'translateY(' + translateY + 'px)';
     this.startY = endY;
   }
+  // touchend event
   touchend(evt: any): void {
     evt.preventDefault();
     let target: any = evt.target || evt.srcElement;
@@ -430,5 +433,7 @@ class Calendar {
   }
 }
 
-new Calendar();
+if(typeof window !== 'undefined') {
+  window['Calendar'] = Calendar;
+}
 export default Calendar;
