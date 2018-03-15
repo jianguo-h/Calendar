@@ -3,6 +3,7 @@ const rimraf = require('rimraf');
 const webpack = require('webpack');
 const webpackProdConfig = require('./webpack.prod.config');
 
+console.log('please wait, project is building... \n');
 const buildPath = path.resolve(__dirname, '../dist');
 rimraf(buildPath, err => {
   if(err) throw new Error(err);

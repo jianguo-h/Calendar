@@ -32,7 +32,7 @@ const webpackProdConfig = webpackMerge(webpackBaseConfig, {
 		}),
 		// 压缩css
 		new OptimizeCssAssetsPlugin({
-			assetNameRegExp: /\.optimize\.css$/g,
+			assetNameRegExp: /\.css$/g,
 			cssProcessor: require('cssnano'),
 			cssProcessorOptions: { 
 				discardComments: {
