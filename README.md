@@ -1,76 +1,61 @@
-# Calendar #
+# Calenda
 
-> 一款移动端的时间选择插件
+> A time selection plug-in for a mobile terminal
 
-## Build Setup ##
+## Build Setup
 
-#### 1.install dependencies ####
-npm install（npm i）
+```
+1. install dependencies
+npm install（npm i/cnpm i）
 
-#### 2.serve with hot reload at localhost:8080 ####
-npm run start
+2. server with hot reload at localhost:8080
+npm run dev
 
-#### build for production with minification ####
+3. build for production with minification
 npm run build
+```
 
-## 简介 ##
-### opts参数 ###
-<pre><code>
+## Introduction ##
+### opts parameter ###
+```typescript
 {
-	// 作用于的元素节点, 同css选择器, eg: "#calendar", ".calendar"
-	el: "",
-	// 设置的日期格式, 默认"yyyy-MM-dd", 可选"yyyy-MM", "yyyy"								
-	format: "yyyy-MM-dd",	
-	// 年数的范围, 默认100, 最小为3			
-	range: 100,	
-	// 是否只读(只有当节点为input时有效)，默认为true							
-	readonly: true,		
-	// 取消的回调函数, 默认为null，设置后可在点击取消时先执行自定义的回调，再隐藏				
-	cancelCb: null,				
-	// 确定的回调函数, 默认为null，设置后可在点击确定时先执行自定义的回调，才隐藏		
-	confirmCb: null						
+	el: '',					// string, 同css选择器, eg: '#calendar', default: '#calendar'
+	format: 'yyyy-MM-dd',   // string, 设置的日期格式, default: 'yyyy-MM-dd', 可选'yyyy-MM', 'yyyy'
+	range: 100,				// number, 年数的范围, default: 100, 最小为3
+	readonly: true,			// boolean, 是否只读(只有当节点为input时有效), default: true
+	onCancel: null,			// function, default: null, 设置后可在点击取消时先执行自定义的回调, 再隐藏
+	onConfirm: null			// function, default: null, 设置后可在点击确定时先执行自定义的回调, 才隐藏	
 }
-</pre></code>
-### 调用方式 ###
-es6 环境下使用如下方式，但是要注意**引入的路径**根据您自己的项目目录进行调整
-<pre><code>
-import "./less/calendar.less";
-import Calendar from "./js/calendar";
-new Calendar ({
-	el: "#calendar"				
-})
-</code></pre>
-### webpack配置 ###
-首次用 es6 写的插件，不会 es6 的童鞋赶紧偷偷的去看看吧，这里推荐阮一峰老师的[es6入门教程](http://es6.ruanyifeng.com/)，webpack的配置也是自己一步一步配过来的，踩了很多坑，不过还好最终还是成功了，这里简单的说下热更新，我是以node.js API的方式进行配置的（config / dev-server.js中），其实[官方文档](https://doc.webpack-china.org/guides/hot-module-replacement/)已经说得很清楚了，主要的几个点如下：
-1. 在 webpack.config.js 的entry选项中添加：webpack/hot/dev-server
-2. 在 webpack.config.js 的plugins选项中添加：new webpack.HotModuleReplacementPlugin()
-3. 在 webpack-dev-server 的配置中添加：hot: true
-4. 在路口文件的开头处加上以下代码
-##### *1. 路口文件的开头处加* #####
-<pre><code>
-if(module.hot) {
-	module.hot.accept();
-}
-</code></pre>
-##### *2. dev-server.js中加上以上1,3两点* #####
-<pre><code>
-var config = require("./webpack.config.js");
-Object.keys(webpackDevConfig.entry).forEach(filename => {
-	webpackDevConfig.entry[filename].unshift("webpack-dev-server/client?http://localhost:"+ port +"/", "webpack/hot/dev-server");
-});
-var compiler = webpack(config);
-const server = new webpackDevServer(compiler, {
-	hot: true,
+```
+### Usage ###
+**可参考dist目录下的index.html**
+1. html文件需引入相关文件, 同时需包含一个dom节点, 例如：
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
+	<title>移动端时间选择插件</title>
+	<link href="./css/calendar.min.css" rel="stylesheet">
+</head>
+<body>
+	<input type="" name="" id = "calendar">
+	<script type="text/javascript" src="./js/calendar.min.js"></script>
+</body>
+</html>
+```
+2. 在创建并且引入你自己的js文件后, 记得在你自己的文件中添加如下代码
+```javascript
+new Calendar();
+// 或者自定义配置参数
+new Calendar({
+	el: '#calendar',
+	range: 50,
 	...
 });
-</code></pre>
-##### *3. webpack.config.js中plugins选项中添加* #####
-<pre><code>
-plugins: [
-		new webpack.HotModuleReplacementPlugin()
-]
-</code></pre>
-### 问题 ###
-虽然这里还存在几个问题待解决，但是通过 es6 的方式引入还是可以的
-1. 热更新对 html 文件的更改无效
-2. 打包之后的代码使用 commonJS 的方式引入失效
+```
+3. src目录下的calendar.js文件为之前的es6写法, 所以使用es6的童鞋也是可以使用的, 至于怎么引入使用就不用说了吧^_^
+
+### Other instructions ###
+>最近在慢慢入坑ts, 所以将之前用 es6 写的插件改成了ts, 已经2018了如果你还不会 es6 的话, 赶紧偷偷的去看看吧, 这里推荐阮一峰老师的[es6入门教程](http://es6.ruanyifeng.com/). webpack方面, 由于近期webpack官方升级到了v4, 所以这边的版本也是最新的v4版, 虽说配置方面简化了很多, 不过依然是全程手动配置. ts方面也还有很多不懂的, 写的也不是很好, 只能通过练习来慢慢熟悉. 手机端的一款小插件, **chrome下记得切换为手机模式查看！**
