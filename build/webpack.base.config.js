@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //npm i --save-dev webpack-contrib/html-webpack-plugin
 module.exports = {
 	entry: {
-		app: './src/calendar.ts'
+		app: './src/calendar.js'
 	},
 	output: {
 		filename: 'js/calendar.min.js',
@@ -13,14 +13,14 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.tsx?$/,
+				test: /\.js$/,
 				exclude: /node_modules/,
-				use: ['ts-loader']
+				use: ['babel-loader']
 			}
 		]
 	},
 	resolve: {
-		extensions: ['.js', '.ts', '.tsx']
+		extensions: ['.js', '.json']
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
