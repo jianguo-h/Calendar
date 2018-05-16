@@ -1,3 +1,5 @@
+@active-color: #31b6e7;
+
 html, body, div, p, span {
 	margin: 0;
 	padding: 0;
@@ -25,7 +27,7 @@ html, body, div, p, span {
 		.calendar-title {
 			display: flex;
 			color: #fff;
-			background-color: #31b6e7;
+			background-color: @active-color;
 			justify-content: space-between;
 			font-size: 16px;
 			& > span {
@@ -34,7 +36,7 @@ html, body, div, p, span {
 		}
 		.calendar-format {
 			display: flex;
-			color: #31b6e7;
+			color: @active-color;
 			text-align: center;
 			padding: 10px 0;
 			& > div {
@@ -53,7 +55,7 @@ html, body, div, p, span {
 				p {
 					padding: 10px 0;
 					&.selected {
-						color: #31b6e7;
+						color: @active-color;
 					}
 				}
 			}
