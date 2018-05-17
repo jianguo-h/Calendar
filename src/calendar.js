@@ -38,11 +38,11 @@
   </div>
 </div>*/
 import "./calendar.less";
-import { formatDate } from './utils';
+import { getType, formatDate } from './utils';
 
 const formats = ['yyyy-MM-dd', 'yyyy-MM', 'yyyy'];
 const curDate = formatDate(new Date());
-const [curYear, curMonth, curDay] = curDate.split('-');
+const [curYear, curMonth, curDay] = curDate.split('-').map(val => Number(val));
 class Calendar {
 	constructor(opts) {
 		if(!(this instanceof Calendar)) {
@@ -66,6 +66,7 @@ class Calendar {
 	// 初始化
 	init() {
 		const format = formats.includes(this.opts.format) ? this.opts.format : 'yyyy-MM-dd';
+		const range = (getType(this.opts.range) === 'number' && this.opts.range >= 3) ? this.opts.range : 3;
     const [year, month, day] = format.split('-');
 		const vnode = {
 			tag: 'div',
@@ -99,15 +100,47 @@ class Calendar {
               tag: 'div',
               props: { className: 'calendar-list' },
               children: [
-                { tag: 'div', props: { className: 'year-list' }, children: [] },
-                month ? { tag: 'div', props: { className: 'month-list' }, children: [] } : null,
-                day ? { tag: 'div', props: { className: 'day-list' }, children: [] } : null
+                {
+                	tag: 'div',
+                	props: { className: 'year-list' },
+                	children: Array.from({ length: range }).map((val, index) => {
+                		const year = curYear - index;
+                		return {
+                			tag: 'p',
+                			props: { className: year === curYear ? 'selected' : '' },
+                			children: year
+                		}
+                	})
+                },
+                month ? {
+                	tag: 'div', props: { className: 'month-list' },
+                	children: Array.from({ length: 12 }).map((val, index) => {
+                		const month = index + 1;
+                		return {
+                			tag: 'p',
+                			props: { className: month === curMonth ? 'selected' : '' },
+                			children: month
+                		}
+                	})
+              	} : null,
+                day ? {
+                	tag: 'div', props: { className: 'day-list' },
+                	children: Array.from({ length: 31 }).map((val, index) => {
+                		const day = index + 1;
+                		return {
+                			tag: 'p',
+                			props: { className: day === curDay ? 'selected' : '' },
+                			children: day
+                		}
+                	})
+                } : null
               ]
             }
           ]
         }
 			]
 		};
+		console.log('>>>>>>>>>>>>>>>>>>> vnode', vnode);
 	}
 }
 

@@ -1,5 +1,5 @@
 // 判断变量的类型
-export const type = val => {
+export const getType = val => {
   const string = Object.prototype.toString.call(val);
   const start = string.indexOf(' ') + 1;
   const end = string.length - 1;
