@@ -38,20 +38,24 @@
   </div>
 </div>*/
 import "./calendar.less";
+import { formatDate } from './utils';
 
 const formats = ['yyyy-MM-dd', 'yyyy-MM', 'yyyy'];
+const curDate = formatDate(new Date());
+const [curYear, curMonth, curDay] = curDate.split('-');
 class Calendar {
 	constructor(opts) {
 		if(!(this instanceof Calendar)) {
       return new Calendar(opts);
     }
 		const defaults = {
-			el: '#calendar',						// 作用于的元素节点, 同css选择器, eg: #calendar, .calendar
-			format: 'yyyy-MM-dd',				// 设置的日期格式, 默认'yyyy-MM-dd', 可选'yyyy-MM', 'yyyy'
-			range: 100,									// 年数的范围, 默认100, 最小为3	
-			readonly: true,							// 是否只读(只有当节点为input时有效)
-			onConfirm: null,						// 取消的回调函数, 默认为null
-			onCancel: null							// 确定的回调函数, 默认为null
+			el: '#calendar',						// 作用于的元素节点, 同css选择器, eg: #calendar, .calendar, default: '#calendar'
+			format: 'yyyy-MM-dd',				// 设置的日期格式, default: 'yyyy-MM-dd', 可选'yyyy-MM', 'yyyy'
+			range: 100,									// 年数的范围, default: 100, 最小为3	
+			readonly: true,							// 是否只读(只有当节点为input时有效), default: true
+      maskClose: true,            // 点击遮罩层是否能关闭, default: true
+			onConfirm: null,						// 取消的回调函数, default: null
+			onCancel: null							// 确定的回调函数, default: null
 		};
 		this.opts = {
 			...defaults,
@@ -62,13 +66,46 @@ class Calendar {
 	// 初始化
 	init() {
 		const format = formats.includes(this.opts.format) ? this.opts.format : 'yyyy-MM-dd';
+    const [year, month, day] = format.split('-');
 		const vnode = {
 			tag: 'div',
 			props: {
 				className: 'calendar'
 			},
 			children: [
-				
+				{ tag: 'div', props: { className: 'calendar-mask' }, children: null },
+        {
+          tag: 'div',
+          props: { className: 'calendar-content slideUp' },
+          children: [
+            { 
+              tag: 'div',
+              props: { className: 'calendar-title' },
+              children: [
+                { tag: 'span', props: { className: 'calendar-cancel' }, children: '取消' },
+                { tag: 'span', props: { className: 'calendar-confirm' }, children: '确定' },
+              ]
+            },
+            { 
+              tag: 'div',
+              props: { className: 'calendar-format' },
+              children: [
+                { tag: 'div', props: null, children: '年' },
+                month ? { tag: 'div', props: null, children: '月' } : null,
+                day ? { tag: 'div', props: null, children: '日' } : null
+              ] 
+            },
+            { 
+              tag: 'div',
+              props: { className: 'calendar-list' },
+              children: [
+                { tag: 'div', props: { className: 'year-list' }, children: [] },
+                month ? { tag: 'div', props: { className: 'month-list' }, children: [] } : null,
+                day ? { tag: 'div', props: { className: 'day-list' }, children: [] } : null
+              ]
+            }
+          ]
+        }
 			]
 		};
 	}

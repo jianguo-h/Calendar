@@ -63,3 +63,26 @@ export const setProps = (node, props) => {
   }
   return node;
 }
+
+// 格式化日期
+export const formatDate = date => {
+  let year, month, day;
+  const type = getType(date);
+  if(!['date', 'string', 'number'].includes(type)) {
+    throw new Error('date type must be Date instance or number or string number');
+  }
+  if(['string', 'number'].includes(type)) {
+    date = Number(date);
+    if(Number.isNaN(date)) {
+      throw new Error('date value has an error' + date);
+    }
+    date = new Date(date);
+  }
+  year = date.getFullYear();
+  month = date.getMonth() + 1;
+  day = date.getDate();
+  month = month < 10 ? ('0' + month) : month;
+  day = day < 10 ? ('0' + day) : day;
+
+  return year + '-' + month + '-' + day;
+}
