@@ -47,7 +47,7 @@ export const setProps = (node, props) => {
     }
     else if(key === 'on') {
       for(const [event, cb] of Object.entries(val)) {
-        if(type(cb) === 'function') {
+        if(getType(cb) === 'function') {
           node['on' + event] = cb;
         }
       }
@@ -81,8 +81,18 @@ export const formatDate = date => {
   year = date.getFullYear();
   month = date.getMonth() + 1;
   day = date.getDate();
-  month = month < 10 ? ('0' + month) : month;
-  day = day < 10 ? ('0' + day) : day;
+  month = fillZero(month);
+  day = fillZero(day);
 
   return year + '-' + month + '-' + day;
+}
+
+// 对于小于10的数补齐0
+export const fillZero = val => {
+  const type = getType(val);
+  const num = Number(val);
+  if(!['string', 'number'].includes(type)) {
+    throw new Error('val type must be number or string number');
+  }
+  return num < 10 ? ('0' + num) : num;
 }

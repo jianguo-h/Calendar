@@ -38,7 +38,11 @@
   </div>
 </div>*/
 import "./calendar.less";
-import { getType, formatDate } from './utils';
+import {
+  getType, formatDate, judgeNodeType,
+  TEXT_NODE, EMPTY_NODE, createTextNode,
+  createEmptyNode, fillZero
+} from './utils';
 
 const formats = ['yyyy-MM-dd', 'yyyy-MM', 'yyyy'];
 const curDate = formatDate(new Date());
@@ -61,12 +65,14 @@ class Calendar {
 			...defaults,
 			...opts
 		};
+    this.calendarEl = null;       // 当前已挂载的元素节点
 		this.init();
 	}
 	// 初始化
 	init() {
 		const format = formats.includes(this.opts.format) ? this.opts.format : 'yyyy-MM-dd';
 		const range = (getType(this.opts.range) === 'number' && this.opts.range >= 3) ? this.opts.range : 3;
+    const onCancel = getType(this.opts.onCancel) === 'function' ? this.opts.onCancel : null;
     const [year, month, day] = format.split('-');
 		const vnode = {
 			tag: 'div',
@@ -83,8 +89,28 @@ class Calendar {
               tag: 'div',
               props: { className: 'calendar-title' },
               children: [
-                { tag: 'span', props: { className: 'calendar-cancel' }, children: '取消' },
-                { tag: 'span', props: { className: 'calendar-confirm' }, children: '确定' },
+                {
+                  tag: 'span',
+                  props: {
+                    className: 'calendar-cancel',
+                    on: {
+                      click: () => {
+                        if(onCancel) {
+                          onCancel();
+                        }
+                        else {
+                          this.close();
+                        }
+                      }
+                    }
+                  },
+                  children: '取消'
+                },
+                {
+                  tag: 'span',
+                  props: { className: 'calendar-confirm' },
+                  children: '确定'
+                },
               ]
             },
             { 
@@ -119,7 +145,7 @@ class Calendar {
                 		return {
                 			tag: 'p',
                 			props: { className: month === curMonth ? 'selected' : '' },
-                			children: month
+                			children: fillZero(month)
                 		}
                 	})
               	} : null,
@@ -130,7 +156,7 @@ class Calendar {
                 		return {
                 			tag: 'p',
                 			props: { className: day === curDay ? 'selected' : '' },
-                			children: day
+                			children: fillZero(day)
                 		}
                 	})
                 } : null
@@ -140,8 +166,57 @@ class Calendar {
         }
 			]
 		};
-		console.log('>>>>>>>>>>>>>>>>>>> vnode', vnode);
+
+    this.calendarEl = this.createElement(vnode);
+    this.mounted(this.calendarEl);
 	}
+  // 生成真是dom
+  createElement(vnode) {
+    if(getType(vnode) !== 'object') {
+      console.error('vnode is not an object', vnode);
+      return;
+    }
+
+    let el;
+    const { tag, props, children } = vnode;
+    const childrenType = getType(children);
+    const nodeType = judgeNodeType(vnode);
+    if(nodeType === TEXT_NODE) {
+      el = createTextNode(children);
+    }
+    else if(nodeType === EMPTY_NODE) {
+      el = createEmptyNode(tag, props);
+    }
+    else {
+      el = createEmptyNode(tag, props);
+      let childNode;
+      if(childrenType === 'array') {
+        for(const child of children) {
+          if(child) {
+            childNode = this.createElement(child);
+            el.appendChild(childNode)
+          }
+        }
+      }
+      else if(childrenType === 'string' || childrenType === 'number') {
+        childNode = createTextNode(children);
+        el.appendChild(childNode);
+      }
+    }
+    
+    return el;
+  }
+  // 关闭
+  close() {
+    if(this.calendarEl) {
+      this.calendarEl.parentNode.removeChild(this.calendarEl);
+      this.calendarEl = null;
+    }
+  }
+  // 挂载到body上
+  mounted(el) {
+    document.body.appendChild(el);
+  }
 }
 
 if(typeof window !== 'undefined') {
