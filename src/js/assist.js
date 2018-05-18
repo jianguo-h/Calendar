@@ -96,3 +96,18 @@ export const fillZero = val => {
   }
   return num < 10 ? ('0' + num) : num;
 }
+
+export const formats = ['yyyy-MM-dd', 'yyyy-MM', 'yyyy'];
+const [curYear, curMonth, curDay] = formatDate(new Date()).split('-').map(val => Number(val));
+export { curYear, curMonth, curDay };
+export const defaults = {
+  el: '#calendar',            // 作用于的元素节点, 同css选择器, eg: #calendar, .calendar, default: '#calendar'
+  format: 'yyyy-MM-dd',       // 设置的日期格式, default: 'yyyy-MM-dd', 可选'yyyy-MM', 'yyyy'
+  range: 100,                 // 年数的范围, default: 100, 最小为3  
+  readonly: true,             // 是否只读(只有当节点为input时有效), default: true
+  maskClose: true,            // 点击遮罩层是否能关闭, default: true
+  confirmText: '确定',        // 确定按钮的文字, default: '确定'
+  onConfirm: null,            // 确定的回调函数, default: null
+  cancelText: '取消',         // 取消按钮的文字, default: '取消'
+  onCancel: null              // 取消的回调函数, default: null
+};

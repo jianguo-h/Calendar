@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //npm i --save-dev webpack-contrib/html-webpack-plugin
 module.exports = {
 	entry: {
-		app: './src/calendar.js'
+		app: './src/js/calendar.js'
 	},
 	output: {
 		filename: 'js/calendar.min.js',
@@ -24,7 +24,7 @@ module.exports = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: './index.html',
+			template: './src/index.html',
 			filename: 'index.html',
 			inject: true
 		})
