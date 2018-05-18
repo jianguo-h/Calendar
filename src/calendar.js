@@ -47,20 +47,23 @@ import {
 const formats = ['yyyy-MM-dd', 'yyyy-MM', 'yyyy'];
 const curDate = formatDate(new Date());
 const [curYear, curMonth, curDay] = curDate.split('-').map(val => Number(val));
+const defaults = {
+  el: '#calendar',            // 作用于的元素节点, 同css选择器, eg: #calendar, .calendar, default: '#calendar'
+  format: 'yyyy-MM-dd',       // 设置的日期格式, default: 'yyyy-MM-dd', 可选'yyyy-MM', 'yyyy'
+  range: 100,                 // 年数的范围, default: 100, 最小为3  
+  readonly: true,             // 是否只读(只有当节点为input时有效), default: true
+  maskClose: true,            // 点击遮罩层是否能关闭, default: true
+  confirmText: '确定',        // 确定按钮的文字, default: '确定'
+  onConfirm: null,            // 确定的回调函数, default: null
+  cancelText: '取消',         // 取消按钮的文字, default: '取消'
+  onCancel: null              // 取消的回调函数, default: null
+};
+
 class Calendar {
 	constructor(opts) {
 		if(!(this instanceof Calendar)) {
       return new Calendar(opts);
     }
-		const defaults = {
-			el: '#calendar',						// 作用于的元素节点, 同css选择器, eg: #calendar, .calendar, default: '#calendar'
-			format: 'yyyy-MM-dd',				// 设置的日期格式, default: 'yyyy-MM-dd', 可选'yyyy-MM', 'yyyy'
-			range: 100,									// 年数的范围, default: 100, 最小为3	
-			readonly: true,							// 是否只读(只有当节点为input时有效), default: true
-      maskClose: true,            // 点击遮罩层是否能关闭, default: true
-			onConfirm: null,						// 取消的回调函数, default: null
-			onCancel: null							// 确定的回调函数, default: null
-		};
 		this.opts = {
 			...defaults,
 			...opts
@@ -70,9 +73,13 @@ class Calendar {
 	}
 	// 初始化
 	init() {
-		const format = formats.includes(this.opts.format) ? this.opts.format : 'yyyy-MM-dd';
-		const range = (getType(this.opts.range) === 'number' && this.opts.range >= 3) ? this.opts.range : 3;
-    const onCancel = getType(this.opts.onCancel) === 'function' ? this.opts.onCancel : null;
+		const format = formats.includes(this.opts.format) ? this.opts.format : defaults.format;
+		const range = (getType(this.opts.range) === 'number' && this.opts.range >= 3) ? this.opts.range : defaults.range;
+    const maskClose = getType(this.opts.maskClose) === 'boolean' ? this.opts.maskClose : defaults.maskClose;
+    const confirmText = getType(this.opts.confirmText) === 'string' ? this.opts.confirmText : defaults.confirmText;
+    const onConfirm = getType(this.opts.onConfirm) === 'function' ? this.opts.onConfirm : defaults.onConfirm;
+    const cancelText = getType(this.opts.cancelText) === 'string' ? this.opts.cancelText : defaults.cancelText;
+    const onCancel = getType(this.opts.onCancel) === 'function' ? this.opts.onCancel : defaults.onCancel;
     const [year, month, day] = format.split('-');
 		const vnode = {
 			tag: 'div',
@@ -80,7 +87,20 @@ class Calendar {
 				className: 'calendar'
 			},
 			children: [
-				{ tag: 'div', props: { className: 'calendar-mask' }, children: null },
+				{
+          tag: 'div',
+          props: {
+            className: 'calendar-mask',
+            on: {
+              click: () => {
+                if(maskClose) {
+                  this.close();
+                }
+              }
+            }
+          },
+          children: null
+        },
         {
           tag: 'div',
           props: { className: 'calendar-content slideUp' },
@@ -104,12 +124,24 @@ class Calendar {
                       }
                     }
                   },
-                  children: '取消'
+                  children: cancelText
                 },
                 {
                   tag: 'span',
-                  props: { className: 'calendar-confirm' },
-                  children: '确定'
+                  props: {
+                    className: 'calendar-confirm',
+                    on: {
+                      click: () => {
+                        if(onConfirm) {
+                          onConfirm();
+                        }
+                        else {
+                          // this.close();
+                        }
+                      }
+                    }
+                  },
+                  children: confirmText
                 },
               ]
             },
