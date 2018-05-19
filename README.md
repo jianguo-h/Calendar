@@ -65,21 +65,21 @@ new Calendar({
   <tbody>
     <tr align='left'>
       <td>el</td>
-      <td>作用于的元素节点, 同css选择器, eg: #calendar, .calendar</td>
+      <td>作用于的元素节点（必须是input标签）, 同css选择器, eg: #calendar, .calendar</td>
       <td>string</td>
       <td>#calendar</td>
     </tr>
     <tr align='left'>
       <td>format</td>
-      <td>设置的日期格式</td>
+      <td>设置的日期格式,可选'yyyy-MM-dd', 'yyyy-MM', 'yyyy'</td>
       <td>string</td>
       <td>yyyy-MM-dd</td>
     </tr>
     <tr align='left'>
       <td>range</td>
-      <td>年数的范围, 最小为3</td>
+      <td>年数的范围, 代表以当前时间年份为中心的前后各多少年, 最小为3</td>
       <td>number</td>
-      <td>100</td>
+      <td>50</td>
     </tr>
     <tr align='left'>
       <td>readonly</td>
