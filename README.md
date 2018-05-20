@@ -27,15 +27,21 @@ npm run build
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
-	<title>移动端时间选择插件</title>
-	<link href="./css/calendar.min.css" rel="stylesheet">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
+  <title>移动端时间选择插件</title>
+  <link href="./css/calendar.min.css" rel="stylesheet"></head>
 <body>
-	<input type="" name="" id = "calendar">
-	<script type="text/javascript" src="./js/calendar.min.js"></script>
-</body>
+  <input type="" name="" id = "calendar">
+  <script type="text/javascript" src="./js/calendar.min.js"></script></body>
+<script>
+  document.getElementById('calendar').onclick = function() {
+    new Calendar({
+      el: '#calendar',
+      range: 5
+    });
+  }
+</script>
 </html>
 ```
 2. 在创建并且引入你自己的js文件后, 记得在你自己的文件中添加如下代码
@@ -50,7 +56,7 @@ new Calendar({
 });
 ```
 
-3. src目录下的calendar.js文件为之前的es6写法, 所以使用es6的童鞋也是可以使用的, 至于怎么引入使用就不用说了吧^_^.
+3. src目录下的calendar.js文件为之前的es6写法, 所以使用es6的童鞋也是可以使用的, 至于怎么引入使用就不用说了吧^_^, **记得在chrome的手机模式下查看**
 
 ### 参数说明
 <table width='100%'>
