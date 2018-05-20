@@ -47,6 +47,7 @@ class Calendar {
       this.el.readonly = readonly;
     }
 
+    this.initValue(format, range);
 		const vnode = {
 			tag: 'div',
 			props: {
@@ -140,7 +141,7 @@ class Calendar {
                 		const year = curYear + range - index;
                 		return {
                 			tag: 'p',
-                			props: { className: year === curYear ? 'selected' : '' },
+                			props: { className: year === Number(this.selectedYear) ? 'selected' : '' },
                 			children: year
                 		}
                 	})
@@ -148,22 +149,22 @@ class Calendar {
                 month ? {
                 	tag: 'div', props: { className: 'month-list' },
                 	children: Array.from({ length: 12 }).map((val, index) => {
-                		const month = index + 1;
+                		const month = fillZero(index + 1);
                 		return {
                 			tag: 'p',
-                			props: { className: month === curMonth ? 'selected' : '' },
-                			children: fillZero(month)
+                			props: { className: month === this.selectedMonth ? 'selected' : '' },
+                			children: month
                 		}
                 	})
               	} : null,
                 day ? {
                 	tag: 'div', props: { className: 'day-list' },
                 	children: Array.from({ length: 31 }).map((val, index) => {
-                		const day = index + 1;
+                		const day = fillZero(index + 1);
                 		return {
                 			tag: 'p',
-                			props: { className: day === curDay ? 'selected' : '' },
-                			children: fillZero(day)
+                			props: { className: day === this.selectedDay ? 'selected' : '' },
+                			children: day
                 		}
                 	})
                 } : null
@@ -189,9 +190,9 @@ class Calendar {
     const firstYearNode = yearListDom.childNodes[0];
     const firstYear = Number(firstYearNode.textContent);
     const singleItemHeight = firstYearNode.offsetHeight;
-    const translateYear = -(firstYear - curYear - 1) * singleItemHeight;
-    const translateMonth = -(curMonth - 2) * singleItemHeight;
-    const translateDay = -(curDay - 2) * singleItemHeight;
+    const translateYear = -(firstYear - this.selectedYear - 1) * singleItemHeight;
+    const translateMonth = -(this.selectedMonth - 2) * singleItemHeight;
+    const translateDay = -(this.selectedDay - 2) * singleItemHeight;
     
     setProps(yearListDom, {
       'data-translateY': translateYear,
@@ -426,6 +427,34 @@ class Calendar {
     }
     document.querySelector(this.opts.el).value = confirmValue;
     this.close();
+  }
+  // 初始化值
+  initValue(format, range) {
+    const value = this.el.value;
+    let [year, month, day] = value.split('-');
+    
+    if(value.trim() === '') {
+      this.selectedYear = curYear;
+      this.selectedMonth = fillZero(curMonth);
+      this.selectedDay = fillZero(curDay);
+      return;
+    }
+
+    if(year > curYear + range || year < curYear - range) {
+      year = curYear;
+    }
+    if(month > 12 || month < 1) {
+      month = curMonth;
+    }
+
+    const curMonthDays = getMonthDays(year, month);
+    if(day < 1 || day > curMonthDays) {
+      day = curDay;
+    }
+
+    this.selectedYear = year;
+    this.selectedMonth = fillZero(month);
+    this.selectedDay = fillZero(day);
   }
 }
 
