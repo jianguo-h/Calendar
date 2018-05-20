@@ -9,6 +9,11 @@
 	<input type="" name="" id = "calendar">
 <script type="text/javascript" src="./js/calendar.min.js"></script></body>
 <script>
-	new Calendar();
+  document.getElementById('calendar').onclick = function() {
+  	new Calendar({
+      el: '#calendar',
+      range: 5
+    });
+  }
 </script>
 </html>
